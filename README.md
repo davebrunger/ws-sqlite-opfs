@@ -29,33 +29,14 @@ pnpm add @sqlite.org/sqlite-wasm drizzle-orm react
 ## Quick start
 
 ```ts
+import { drizzle } from "drizzle-orm/sqlite-proxy";
 import { useClient } from "@whitstable-software/sqlite-opfs";
 
 export function useAppDb() {
-	const client = useClient({
-		databaseName: "app-db",
-		migrations: [
-			{
-				name: "001_create_users",
-				sql: `
-					CREATE TABLE IF NOT EXISTS users (
-						id INTEGER PRIMARY KEY,
-						name TEXT NOT NULL
-					);
-				`,
-			},
-		],
-	});
-
-	return client;
+	const client = useClient({ databaseName: "app-db" });
+	const db = drizzle(client.exec);
+	return { db, client };
 }
-```
-
-Run SQL directly:
-
-```ts
-const rows = await client.exec("SELECT id, name FROM users", [], "all");
-console.log(rows.rows);
 ```
 
 ## Drizzle integration example
@@ -63,16 +44,14 @@ console.log(rows.rows);
 This package is designed to pair well with Drizzle's SQLite proxy style.
 
 ```ts
-import { sqliteProxy } from "drizzle-orm/sqlite-proxy";
+import { drizzle } from "drizzle-orm/sqlite-proxy";
 import { useClient } from "@whitstable-software/sqlite-opfs";
 
 export function useDrizzleDb() {
-	const client = useClient({ databaseName: "app-db" });
+	const databaseName = "app-db";
 
-	const db = sqliteProxy(async (sql, params, method) => {
-		const result = await client.exec(sql, params as any[], method as any);
-		return { rows: result.rows };
-	});
+	const client = useClient({ databaseName, migrations: loadMigrations });
+	const db = drizzle(client.exec);
 
 	return { db, client };
 }
@@ -93,6 +72,26 @@ type Migration = {
 	readonly name: string;
 	readonly sql: string;
 };
+```
+
+Vite loader example for `.sql` files:
+
+```ts
+function loadMigrations() {
+	const modules = import.meta.glob("/drizzle/*.sql", {
+		query: "raw",
+		import: "default",
+		eager: true,
+	});
+
+	const entries = Object.entries(modules)
+		.sort(([a], [b]) => a.localeCompare(b));
+
+	return entries.map(([name, sql]) => ({
+		name,
+		sql: sql as string,
+	}));
+}
 ```
 
 On open, the package:
@@ -130,7 +129,7 @@ type DbClient = {
 	readonly openDb: () => Promise<DbHandle>;
 	readonly exec: (sql: string, params: any[], method: "run" | "all" | "values" | "get") => Promise<{ rows: any[] }>;
 	readonly close: () => Promise<void>;
-	readonly vaccuumInto: (targetDatabaseName: string) => Promise<void>;
+	readonly vacuumInto: (targetDatabaseName: string) => Promise<void>;
 	readonly switchDb: (newConfig: ClientOptions) => Promise<void>;
 };
 ```
