@@ -1,0 +1,55 @@
+{
+    "name": "@whitstable-software/sqlite-opfs",
+    "version": "1.0.0",
+    "private": false,
+    "type": "module",
+    "description": "React-friendly SQLite WASM client for OPFS with migration and backup/restore helpers.",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "prepublishOnly": "pnpm build",
+        "test": "node --test"
+    },
+    "keywords": [
+        "React",
+        "Drizzle",
+        "Sqlite",
+        "OPFS"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/davebrunger/ws-sqlite-opfs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/davebrunger/ws-sqlite-opfs/issues"
+    },
+    "homepage": "https://github.com/davebrunger/ws-sqlite-opfs#readme",
+    "author": "David Brunger",
+    "license": "MIT",
+    "packageManager": "pnpm@10.29.3",
+    "devDependencies": {
+        "tsup": "^8.5.1",
+        "typescript": "^5.9.3",
+        "@types/react": "^19.2.7"
+    },
+    "peerDependencies": {
+        "@sqlite.org/sqlite-wasm": "^3.51.2-build6",
+        "drizzle-orm": "^0.45.1",
+        "react": "^19.2.0"
+    }
+}
