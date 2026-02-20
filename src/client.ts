@@ -7,7 +7,7 @@ type ExecMethod = 'run' | 'all' | 'values' | 'get';
 type ExecResult = { rows: any[] };
 type SqlValue = any;
 
-type ClientOptions = {
+export type ClientOptions = {
     readonly databaseName: string;
     readonly migrations?: MigrationsProvider;
 };

@@ -6,7 +6,7 @@ It provides:
 - A `useClient()` hook that manages opening/closing an OPFS-backed SQLite DB
 - Optional startup migrations
 - Backup/download and restore helpers
-- Database filename/URI helper utilities
+- Exported TypeScript types for clients and migrations
 
 ## Installation
 
@@ -18,6 +18,21 @@ Peer dependencies (install in your app):
 
 ```bash
 pnpm add @sqlite.org/sqlite-wasm drizzle-orm react
+```
+
+Import surface:
+
+```ts
+import {
+	useClient,
+	backupDatabase,
+	restoreDatabase,
+	type ClientOptions,
+	type DbHandle,
+	type DbClient,
+	type Migration,
+	type MigrationsProvider,
+} from "@whitstable-software/sqlite-opfs";
 ```
 
 ## Requirements
@@ -134,16 +149,18 @@ type DbClient = {
 };
 ```
 
-### Utility exports
+### Root exports
 
+- `useClient(options)`
 - `backupDatabase(client)`
 - `restoreDatabase(client, targetDatabaseName, file)`
-- `buildDbUri(databaseName)`
-- `buildDFilename(databaseName)`
-- `buildBackupDbUri(databaseName, date?)`
-- `buildBackupDbFilename(databaseName, date?)`
-- `resolveMigrations(...)`
-- `applyMigrations(...)`
+- `ClientOptions` (type)
+- `DbHandle` (type)
+- `DbClient` (type)
+- `Migration` (type)
+- `MigrationsProvider` (type)
+
+Type symbols are exported as type-only exports, so import them with `import type`.
 
 ## Notes
 
