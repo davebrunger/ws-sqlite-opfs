@@ -23,7 +23,6 @@ export type DbClient = {
     readonly exec: (sql: string, params: any[], method: ExecMethod) => Promise<ExecResult>;
     readonly close: () => Promise<void>;
     readonly vacuumInto: (targetDatabaseName: string) => Promise<void>
-    readonly vaccuumInto: (targetDatabaseName: string) => Promise<void>
     readonly switchDb: (newConfig: ClientOptions) => Promise<void>
 }
 
@@ -122,12 +121,10 @@ export function useClient(initialOptions: ClientOptions): DbClient {
         });
     }, [openDb]);
 
-    const vaccuumInto = vacuumInto;
-
     const switchDb = React.useCallback(async (newConfig: ClientOptions) => {
         await close();
         options.current = newConfig;
     }, [close])
 
-    return { openDb, exec, close, vacuumInto, vaccuumInto, switchDb };
+    return { openDb, exec, close, vacuumInto, switchDb };
 }

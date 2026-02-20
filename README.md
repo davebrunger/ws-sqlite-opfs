@@ -1,6 +1,6 @@
 # @whitstable-software/sqlite-opfs
 
-`@ws/sqlite-opfs` is a small React-first helper package for running SQLite in the browser using OPFS and wiring it into Drizzle.
+`@whitstable-software/sqlite-opfs` is a small React-first helper package for running SQLite in the browser using OPFS and wiring it into Drizzle.
 
 It provides:
 - A `useClient()` hook that manages opening/closing an OPFS-backed SQLite DB
@@ -11,7 +11,7 @@ It provides:
 ## Installation
 
 ```bash
-pnpm add @ws/sqlite-opfs
+pnpm add @whitstable-software/sqlite-opfs
 ```
 
 Peer dependencies (install in your app):
@@ -29,7 +29,7 @@ pnpm add @sqlite.org/sqlite-wasm drizzle-orm react
 ## Quick start
 
 ```ts
-import { useClient } from "@ws/sqlite-opfs";
+import { useClient } from "@whitstable-software/sqlite-opfs";
 
 export function useAppDb() {
 	const client = useClient({
@@ -64,7 +64,7 @@ This package is designed to pair well with Drizzle's SQLite proxy style.
 
 ```ts
 import { sqliteProxy } from "drizzle-orm/sqlite-proxy";
-import { useClient } from "@ws/sqlite-opfs";
+import { useClient } from "@whitstable-software/sqlite-opfs";
 
 export function useDrizzleDb() {
 	const client = useClient({ databaseName: "app-db" });
@@ -103,7 +103,7 @@ On open, the package:
 ## Backup and restore
 
 ```ts
-import { backupDatabase, restoreDatabase } from "@ws/sqlite-opfs";
+import { backupDatabase, restoreDatabase } from "@whitstable-software/sqlite-opfs";
 
 // Downloads a dated .sqlite3 backup file to the user
 await backupDatabase(client);

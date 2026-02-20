@@ -1,6 +1,6 @@
 {
     "name": "@whitstable-software/sqlite-opfs",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "private": false,
     "type": "module",
     "description": "React-friendly SQLite WASM client for OPFS with migration and backup/restore helpers.",

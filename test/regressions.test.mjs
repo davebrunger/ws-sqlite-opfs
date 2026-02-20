@@ -11,13 +11,6 @@ test("package exports require points to dist/index.cjs", () => {
   assert.equal(pkg.exports["."].require, "./dist/index.cjs");
 });
 
-test("client exposes vacuumInto and deprecated vaccuumInto alias", () => {
-  const src = read("src/client.ts");
-  assert.match(src, /readonly vacuumInto:\s*\(targetDatabaseName: string\) => Promise<void>/);
-  assert.match(src, /readonly vaccuumInto:\s*\(targetDatabaseName: string\) => Promise<void>/);
-  assert.match(src, /const vaccuumInto = vacuumInto;/);
-});
-
 test("client awaits resolveMigrations before applyMigrations", () => {
   const src = read("src/client.ts");
   assert.match(src, /const migrationsToRun = await resolveMigrations\(migrations\);/);
