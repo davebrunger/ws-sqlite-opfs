@@ -1,4 +1,4 @@
-# @ws/sqlite-opfs
+# @whitstable-software/sqlite-opfs
 
 `@ws/sqlite-opfs` is a small React-first helper package for running SQLite in the browser using OPFS and wiring it into Drizzle.
 
