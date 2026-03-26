@@ -33,9 +33,7 @@ export function useClient(initialOptions: ClientOptions): DbClient {
     const openingHandle = React.useRef<Promise<DbHandle> | undefined>(undefined);
     const worker = React.useRef<Worker | undefined>(undefined)
 
-    React.useEffect(() => {
-        options.current = initialOptions;
-    }, [initialOptions.databaseName, initialOptions.migrations]);
+    options.current = initialOptions;
 
     const openDb = React.useCallback(async (): Promise<DbHandle> => {
 
@@ -95,14 +93,13 @@ export function useClient(initialOptions: ClientOptions): DbClient {
         const currentHandle = handle.current ?? (openingHandle.current
             ? await openingHandle.current.catch(() => undefined)
             : undefined);
+
+        // Clear refs immediately so openDb won't return a stale/closing handle
+        handle.current = undefined;
         openingHandle.current = undefined;
 
         if (currentHandle) {
-            try {
-                await currentHandle.promiser("close", { dbId: currentHandle.dbId });
-            } finally {
-                handle.current = undefined;
-            }
+            await currentHandle.promiser("close", { dbId: currentHandle.dbId });
         }
 
         if (worker.current) {
@@ -111,6 +108,10 @@ export function useClient(initialOptions: ClientOptions): DbClient {
         }
 
     }, []);
+
+    React.useEffect(() => {
+        return () => { close(); };
+    }, [close]);
 
     const vacuumInto = React.useCallback(async (targetDatabaseName: string) => {
         const { promiser, dbId } = await openDb();
@@ -122,9 +123,13 @@ export function useClient(initialOptions: ClientOptions): DbClient {
     }, [openDb]);
 
     const switchDb = React.useCallback(async (newConfig: ClientOptions) => {
+        const wasOpen = !!(handle.current || openingHandle.current);
         await close();
         options.current = newConfig;
-    }, [close])
+        if (wasOpen) {
+            await openDb();
+        }
+    }, [close, openDb])
 
     return { openDb, exec, close, vacuumInto, switchDb };
 }
